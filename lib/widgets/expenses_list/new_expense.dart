@@ -10,18 +10,14 @@ class NewExpense extends StatefulWidget {
 }
 
 class _NewExpenseState extends State<NewExpense> {
-  var _enteredTitle = ''; // global var for title var
-
-  void _onSaveTitle(String inputValue) {
-    /* 
-    This function handle key stroke input value then
-    store it in  _enteredTitle var
-    
-     */
-    _enteredTitle = inputValue; // store input stroke to title var
-  }
+  final _titleController = TextEditingController();
 
   @override
+  void dispose() {
+    _titleController.dispose();
+    super.dispose();
+  }
+
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16),
@@ -29,8 +25,8 @@ class _NewExpenseState extends State<NewExpense> {
         children: [
           // Creates a Material Design text field.
           TextField(
-            onChanged:
-                _onSaveTitle, // will pass keystroke to _onSaveTitle function
+            controller:
+                _titleController, // handling input with TextEditingController
             maxLength: 50,
             keyboardType: TextInputType.name,
             decoration: const InputDecoration(
@@ -43,7 +39,7 @@ class _NewExpenseState extends State<NewExpense> {
               ElevatedButton(
                 onPressed: () {
                   // execute event to save inputs field
-                  print(_enteredTitle);
+                  print(_titleController.text);
                 },
                 child: const Text("Save Expense"),
               )
