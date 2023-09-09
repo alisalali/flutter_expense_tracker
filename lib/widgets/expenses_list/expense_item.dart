@@ -36,9 +36,11 @@ class ExpenseItem extends StatelessWidget {
                 // to have item to the right space
                 Row(
                   children: [
-                    const Icon(Icons.alarm), // showing icon symbol
+                    Icon(categoryIcon[expense
+                        .category]), // pass expense category to category constant object as enum value Model file
                     const SizedBox(width: 8),
-                    Text(expense.date.toString()), //to display date as string
+                    Text(expense
+                        .formattedDate), //to display date with formatted get function on Model file
                   ],
                 )
               ],

@@ -1,6 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart'; // generate unique id , install this using $ flutter pub uuid
+import 'package:intl/intl.dart'; // formatting date package
 
 const uuid = Uuid(); //initialize class for uuid package
+final formatter = DateFormat.yMd(); //initialize class formate date
 
 enum Category {
   food,
@@ -8,6 +11,14 @@ enum Category {
   leisure,
   work,
 } //define custom type predefine value
+
+//formatting category icons with enum as object
+const categoryIcon = {
+  Category.food: Icons.lunch_dining,
+  Category.travel: Icons.flight_takeoff,
+  Category.leisure: Icons.movie,
+  Category.work: Icons.work,
+};
 
 class Expense {
   Expense({
@@ -22,4 +33,9 @@ class Expense {
   final double amount;
   final DateTime date;
   final Category category;
+
+  //formatting date with  intl package
+  String get formattedDate {
+    return formatter.format(date); //pass date to formatter
+  }
 }
