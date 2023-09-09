@@ -10,7 +10,8 @@ class NewExpense extends StatefulWidget {
 }
 
 class _NewExpenseState extends State<NewExpense> {
-  final _titleController = TextEditingController();
+  final _titleController =
+      TextEditingController(); //object handling user inputs
 
   @override
   void dispose() {
@@ -18,6 +19,7 @@ class _NewExpenseState extends State<NewExpense> {
     super.dispose();
   }
 
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16),
@@ -25,8 +27,7 @@ class _NewExpenseState extends State<NewExpense> {
         children: [
           // Creates a Material Design text field.
           TextField(
-            controller:
-                _titleController, // handling input with TextEditingController
+            controller: _titleController, // handling input with Text
             maxLength: 50,
             keyboardType: TextInputType.name,
             decoration: const InputDecoration(
