@@ -1,3 +1,4 @@
+import 'package:expense_tracker/widgets/expenses_list/new_expense.dart';
 import 'package:flutter/material.dart';
 
 import 'package:expense_tracker/widgets/expenses_list/expenses_list.dart';
@@ -34,7 +35,7 @@ class _ExpensesState extends State<Expenses> {
            context property is metadata collection mange by flutter
            overall widget tree extend by the class
        */
-      builder: (ctx) => const Text("Model bottom sheet"),
+      builder: (ctx) => const NewExpense(),
     );
   }
 
