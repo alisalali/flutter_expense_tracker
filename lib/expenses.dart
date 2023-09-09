@@ -1,5 +1,6 @@
-import 'package:expense_tracker/widgets/expenses_list/expenses_list.dart';
 import 'package:flutter/material.dart';
+
+import 'package:expense_tracker/widgets/expenses_list/expenses_list.dart';
 import 'package:expense_tracker/models/expense.dart';
 
 class Expenses extends StatefulWidget {
@@ -25,16 +26,28 @@ class _ExpensesState extends State<Expenses> {
         date: DateTime.now(),
         category: Category.leisure)
   ];
+  void _openAddExpenseOverlay() {
+    showModalBottomSheet(
+      //Shows a modal Material Design bottom sheet.
+      context: context,
+      /* 
+           context property is metadata collection mange by flutter
+           overall widget tree extend by the class
+       */
+      builder: (ctx) => const Text("Model bottom sheet"),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       // An app bar to display at the top of the scaffold.
       appBar: AppBar(
+        title: const Text("Flutter Expense Tracker"),
         actions: [
           //A list of Widgets to display in a row after the [title] widget.
           IconButton(
-            onPressed: () {},
+            onPressed: _openAddExpenseOverlay,
             icon: const Icon(Icons.add),
           ),
         ],
