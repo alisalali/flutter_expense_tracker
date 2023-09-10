@@ -49,12 +49,14 @@ class _NewExpenseState extends State<NewExpense> {
           Row(
             children: [
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pop(context);
+                },
                 child: const Text("Cancel"),
               ),
               ElevatedButton(
                 onPressed: () {
-                  // execute event to save inputs field
+                  // execute event to save inputs fields
                   print(_titleController.text);
                   print(_amountController.text);
                 },
