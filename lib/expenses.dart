@@ -33,6 +33,12 @@ class _ExpensesState extends State<Expenses> {
     });
   }
 
+  void _removeExpense(Expense expense) {
+    setState(() {
+      _registeredExpenses.remove(expense);
+    });
+  }
+
   void _openAddExpenseOverlay() {
     showModalBottomSheet(
       //Shows a modal Material Design bottom sheet.
@@ -65,7 +71,10 @@ class _ExpensesState extends State<Expenses> {
           const Text("chart"),
           // because ListView rendering a column inside column  should wrap it with Expanded widget to display
           Expanded(
-            child: ExpensesList(expenses: _registeredExpenses),
+            child: ExpensesList(
+              expenses: _registeredExpenses,
+              onRemoveExpense: _removeExpense,
+            ),
           ),
         ],
       ),

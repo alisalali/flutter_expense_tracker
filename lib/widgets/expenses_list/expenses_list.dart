@@ -6,9 +6,11 @@ class ExpensesList extends StatelessWidget {
   const ExpensesList({
     super.key,
     required this.expenses,
+    required this.onRemoveExpense,
   }); //define class property contractor
 
   final List<Expense> expenses;
+  final void Function(Expense expense) onRemoveExpense;
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +24,13 @@ class ExpensesList extends StatelessWidget {
     */
     return ListView.builder(
       itemCount: expenses.length, // define the length of scrollable list
-      itemBuilder: (ctx, index) =>
-          ExpenseItem(expenses[index]), // define widget custom list item
+      itemBuilder: (ctx, index) => Dismissible(
+          key: ValueKey(expenses[index]),
+          onDismissed: (direction) {
+            onRemoveExpense(expenses[index]);
+          },
+          child:
+              ExpenseItem(expenses[index])), // define widget custom list item
     );
   }
 }
