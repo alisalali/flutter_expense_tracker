@@ -27,6 +27,13 @@ class _ExpensesState extends State<Expenses> {
         date: DateTime.now(),
         category: Category.leisure)
   ];
+  void _AddExpense(Expense expense) {
+    setState(() {
+      print(expense);
+      _registeredExpenses.add(expense);
+    });
+  }
+
   void _openAddExpenseOverlay() {
     showModalBottomSheet(
       //Shows a modal Material Design bottom sheet.
@@ -35,7 +42,7 @@ class _ExpensesState extends State<Expenses> {
            context property is metadata collection mange by flutter
            overall widget tree extend by the class
        */
-      builder: (ctx) => const NewExpense(),
+      builder: (ctx) => NewExpense(onAddExpense: _AddExpense),
     );
   }
 
