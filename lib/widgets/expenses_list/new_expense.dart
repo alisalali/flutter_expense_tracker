@@ -39,6 +39,14 @@ class _NewExpenseState extends State<NewExpense> {
     });
   }
 
+  void _submitExpenseData() {
+    final enteredAmount = double.tryParse(_amountController.text);
+    final invalidEnteredAmount = enteredAmount == null || enteredAmount <= 0;
+    if (_titleController.text.trim().isEmpty ||
+        invalidEnteredAmount ||
+        _selectedDate == null) {}
+  }
+
   @override
   void dispose() {
     // This function will remove controller from memory
@@ -128,11 +136,8 @@ class _NewExpenseState extends State<NewExpense> {
                 child: const Text("Cancel"),
               ),
               ElevatedButton(
-                onPressed: () {
-                  // execute event to save inputs fields
-                  print(_titleController.text);
-                  print(_amountController.text);
-                },
+                // execute event to save inputs fields
+                onPressed: _submitExpenseData,
                 child: const Text("Save Expense"),
               )
             ],
