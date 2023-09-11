@@ -27,9 +27,8 @@ class _ExpensesState extends State<Expenses> {
         date: DateTime.now(),
         category: Category.leisure)
   ];
-  void _AddExpense(Expense expense) {
+  void _addExpense(Expense expense) {
     setState(() {
-      print(expense);
       _registeredExpenses.add(expense);
     });
   }
@@ -38,11 +37,12 @@ class _ExpensesState extends State<Expenses> {
     showModalBottomSheet(
       //Shows a modal Material Design bottom sheet.
       context: context,
+      isScrollControlled: true,
       /* 
            context property is metadata collection mange by flutter
            overall widget tree extend by the class
        */
-      builder: (ctx) => NewExpense(onAddExpense: _AddExpense),
+      builder: (ctx) => NewExpense(onAddExpense: _addExpense),
     );
   }
 
