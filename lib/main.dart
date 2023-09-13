@@ -35,9 +35,9 @@ void main() {
         // Modify TextsTheme widgets , with title
         textTheme: ThemeData().textTheme.copyWith(
               titleLarge: TextStyle(
-                fontWeight: FontWeight.normal,
+                fontWeight: FontWeight.bold,
                 color: kColorScheme.onSecondary,
-                fontSize: 14,
+                fontSize: 16,
               ),
             ),
       ),

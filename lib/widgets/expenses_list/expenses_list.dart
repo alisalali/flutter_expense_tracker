@@ -26,6 +26,14 @@ class ExpensesList extends StatelessWidget {
       itemCount: expenses.length, // define the length of scrollable list
       itemBuilder: (ctx, index) => Dismissible(
           key: ValueKey(expenses[index]),
+          background: Container(
+            //access of color in colorscheme error obj
+            color: Theme.of(context).colorScheme.error.withOpacity(0.75),
+            // access cardTheme object with margin horizontal
+            margin: EdgeInsets.symmetric(
+              horizontal: Theme.of(context).cardTheme.margin!.horizontal,
+            ),
+          ),
           onDismissed: (direction) {
             onRemoveExpense(expenses[index]);
           },
