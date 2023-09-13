@@ -1,3 +1,4 @@
+import 'package:expense_tracker/widgets/chart/chart.dart';
 import 'package:flutter/material.dart';
 
 import 'package:expense_tracker/widgets/expenses_list/new_expense.dart';
@@ -17,13 +18,28 @@ class _ExpensesState extends State<Expenses> {
   //define dummy data by importing expense modals package
   final List<Expense> _registeredExpenses = [
     Expense(
+        title: "sandwish",
+        amount: 20.99,
+        date: DateTime.now(),
+        category: Category.food),
+    Expense(
         title: "Flutter Course",
-        amount: 19.99,
+        amount: 9,
         date: DateTime.now(),
         category: Category.work),
     Expense(
         title: "Cinema",
-        amount: 19.99,
+        amount: 20.99,
+        date: DateTime.now(),
+        category: Category.leisure),
+    Expense(
+        title: "fashion",
+        amount: 20.99,
+        date: DateTime.now(),
+        category: Category.leisure),
+    Expense(
+        title: "Rugby",
+        amount: 20.99,
         date: DateTime.now(),
         category: Category.leisure)
   ];
@@ -107,7 +123,7 @@ class _ExpensesState extends State<Expenses> {
       ),
       body: Column(
         children: [
-          const Text("chart"),
+          Chart(expenses: _registeredExpenses),
           // because ListView rendering a column inside column  should wrap it with Expanded widget to display
           Expanded(
             child: mainContent,
