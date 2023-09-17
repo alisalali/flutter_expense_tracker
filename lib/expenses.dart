@@ -100,6 +100,11 @@ class _ExpensesState extends State<Expenses> {
     validate main content to make sure _registeredExpenses [List]
     has items on list or showing message 
      */
+
+    final width = MediaQuery.of(context)
+        .size
+        .width; // width space available in media query
+
     Widget mainContent = const Center(
       child: Text("No expenses found. Start adding some !"),
     );
@@ -121,15 +126,25 @@ class _ExpensesState extends State<Expenses> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Chart(expenses: _registeredExpenses),
-          // because ListView rendering a column inside column  should wrap it with Expanded widget to display
-          Expanded(
-            child: mainContent,
-          ),
-        ],
-      ),
+      body: width < 600 // validate width space available in media query
+          ? Column(
+              children: [
+                Chart(expenses: _registeredExpenses),
+                // because ListView rendering a column inside column  should wrap it with Expanded widget to display
+                Expanded(
+                  child: mainContent,
+                ),
+              ],
+            )
+          : Row(
+              children: [
+                Expanded(child: Chart(expenses: _registeredExpenses)),
+                // because ListView rendering a column inside column  should wrap it with Expanded widget to display
+                Expanded(
+                  child: mainContent,
+                ),
+              ],
+            ),
     );
   }
 }
