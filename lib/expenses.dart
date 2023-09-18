@@ -18,7 +18,7 @@ class _ExpensesState extends State<Expenses> {
   //define dummy data by importing expense modals package
   final List<Expense> _registeredExpenses = [
     Expense(
-        title: "sandwish",
+        title: "sandwich",
         amount: 20.99,
         date: DateTime.now(),
         category: Category.food),
@@ -84,6 +84,7 @@ class _ExpensesState extends State<Expenses> {
   void _openAddExpenseOverlay() {
     //Shows a modal Material Design bottom sheet.
     showModalBottomSheet(
+      useSafeArea: true, // safe area to stay away from device toolbar
       context: context,
       isScrollControlled: true,
       /* 
