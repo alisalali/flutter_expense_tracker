@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/models/expense.dart';
 
@@ -39,16 +42,30 @@ class _NewExpenseState extends State<NewExpense> {
     );
     setState(() {
       _selectedDate = pickedDate;
-      // print(formattedDate);
     });
   }
 
-  void _submitExpenseData() {
-    final enteredAmount = double.tryParse(_amountController.text);
-    final invalidEnteredAmount = enteredAmount == null || enteredAmount <= 0;
-    if (_titleController.text.trim().isEmpty ||
-        invalidEnteredAmount ||
-        _selectedDate == null) {
+  void _showDialog() {
+    if (Platform.isIOS) {
+      // check the platform
+      showCupertinoDialog(
+          context: context,
+          builder: (ctx) {
+            return CupertinoAlertDialog(
+              title: const Text("Invalid inputs"),
+              content: const Text(
+                  "Please make sure a valid title,amount,date and category was enter"),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(ctx);
+                  },
+                  child: const Text("OK"),
+                ),
+              ],
+            );
+          });
+    } else {
       showDialog(
           context: context,
           builder: (ctx) {
@@ -66,6 +83,16 @@ class _NewExpenseState extends State<NewExpense> {
               ],
             );
           });
+    }
+  }
+
+  void _submitExpenseData() {
+    final enteredAmount = double.tryParse(_amountController.text);
+    final invalidEnteredAmount = enteredAmount == null || enteredAmount <= 0;
+    if (_titleController.text.trim().isEmpty ||
+        invalidEnteredAmount ||
+        _selectedDate == null) {
+      _showDialog();
       return;
     }
     Expense newExpense = Expense(
@@ -90,100 +117,194 @@ class _NewExpenseState extends State<NewExpense> {
   Widget build(BuildContext context) {
     //The parts of the display that are completely obscured by system UI, typically by the device's keyboard.
     final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
+    return LayoutBuilder(builder: (ctx, constrains) {
+      final width = constrains.maxWidth;
 
-    return SizedBox(
-      height: double.infinity,
-      // to expand overlay to keyboard
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(16, 16, 16, keyboardSpace + 16),
-          child: Column(
-            children: [
-              // Creates a Material Design text field.
-              TextField(
-                controller: _titleController, // handling input with Text
-                maxLength: 50,
-                keyboardType: TextInputType.name,
-                decoration: const InputDecoration(
-                  //The decoration to show around the text field.
-                  label: Text("Title"),
-                ),
-              ),
-
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _amountController, // handling input with Text
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        //The decoration to show around the text field.
-                        label: Text("Amount"),
-                        prefixText: '\$',
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(_selectedDate == null
-                            ? 'No date selected'
-                            : formatter.format(
-                                _selectedDate!)), // (!) to force dart assume value is not null
-                        IconButton(
-                          onPressed: _presentDatePicker,
-                          icon: const Icon(Icons.calendar_month),
+      return SizedBox(
+        height: double.infinity,
+        // to expand overlay to keyboard
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(16, 16, 16, keyboardSpace + 16),
+            child: Column(
+              children: [
+                if (width >= 600)
+                  Row(
+                    // This will show title and amount in one line
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        // _titleController
+                        child: TextField(
+                          controller: _titleController,
+                          maxLength: 50,
+                          decoration: const InputDecoration(
+                            //The decoration to show around the text field.
+                            label: Text("Title"),
+                          ),
                         ),
-                      ],
+                      ),
+                      const SizedBox(width: 24),
+                      Expanded(
+                        child: TextField(
+                          controller:
+                              _amountController, // handling input with Text
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(
+                            //The decoration to show around the text field.
+                            label: Text("Amount"),
+                            prefixText: '\$',
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                else
+                  // will show vertical title amount
+                  // Creates a Material Design text field.
+                  TextField(
+                    controller: _titleController, // handling input with Text
+                    maxLength: 50,
+                    keyboardType: TextInputType.name,
+                    decoration: const InputDecoration(
+                      //The decoration to show around the text field.
+                      label: Text("Title"),
                     ),
-                  )
-                ],
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                children: [
-                  DropdownButton(
-                    value: _selectedCategory, // to get value
-                    items: Category.values
-                        .map((category) => DropdownMenuItem(
-                              value: category,
-                              child: Text(
-                                category.name.toUpperCase(),
-                              ),
-                            ))
-                        .toList(),
-                    onChanged: (value) {
-                      if (value == null) {
-                        return;
-                      }
-                      setState(() {
-                        _selectedCategory = value;
-                      });
-                    },
                   ),
-                  const Spacer(),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text("Cancel"),
-                  ),
-                  ElevatedButton(
-                    // execute event to save inputs fields
-                    onPressed: _submitExpenseData,
-                    child: const Text("Save Expense"),
+                if (width >= 600)
+                  Row(
+                    // will show drop down category and date selector in one line
+                    children: [
+                      DropdownButton(
+                        value: _selectedCategory, // to get value
+                        items: Category.values
+                            .map((category) => DropdownMenuItem(
+                                  value: category,
+                                  child: Text(
+                                    category.name.toUpperCase(),
+                                  ),
+                                ))
+                            .toList(),
+                        onChanged: (value) {
+                          if (value == null) {
+                            return;
+                          }
+                          setState(() {
+                            _selectedCategory = value;
+                          });
+                        },
+                      ),
+                      const SizedBox(width: 24),
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(_selectedDate == null
+                                ? 'No date selected'
+                                : formatter.format(
+                                    _selectedDate!)), // (!) to force dart assume value is not null
+                            IconButton(
+                              onPressed: _presentDatePicker,
+                              icon: const Icon(Icons.calendar_month),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
                   )
-                ],
-              )
-            ],
+                else
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller:
+                              _amountController, // handling input with Text
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(
+                            //The decoration to show around the text field.
+                            label: Text("Amount"),
+                            prefixText: '\$',
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(_selectedDate == null
+                                ? 'No date selected'
+                                : formatter.format(
+                                    _selectedDate!)), // (!) to force dart assume value is not null
+                            IconButton(
+                              onPressed: _presentDatePicker,
+                              icon: const Icon(Icons.calendar_month),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                const SizedBox(height: 16),
+
+                /*  */
+                if (width >= 600)
+                  Row(children: [
+                    const Spacer(),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('Cancel'),
+                    ),
+                    ElevatedButton(
+                      onPressed: _submitExpenseData,
+                      child: const Text('Save Expense'),
+                    ),
+                  ])
+                else
+                  Row(
+                    children: [
+                      DropdownButton(
+                        value: _selectedCategory, // to get value
+                        items: Category.values
+                            .map((category) => DropdownMenuItem(
+                                  value: category,
+                                  child: Text(
+                                    category.name.toUpperCase(),
+                                  ),
+                                ))
+                            .toList(),
+                        onChanged: (value) {
+                          if (value == null) {
+                            return;
+                          }
+                          setState(() {
+                            _selectedCategory = value;
+                          });
+                        },
+                      ),
+                      const Spacer(),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text("Cancel"),
+                      ),
+                      ElevatedButton(
+                        // execute event to save inputs fields
+                        onPressed: _submitExpenseData,
+                        child: const Text("Save Expense"),
+                      )
+                    ],
+                  )
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 }
